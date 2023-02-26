@@ -22,7 +22,7 @@ impl Face {
             Face::Right => Face::Left,
             Face::Left => Face::Right,
             Face::Up => Face::Down,
-            Face::Down => Face::Right,
+            Face::Down => Face::Up,
         }
     }
 }
@@ -120,5 +120,156 @@ impl Distribution<Rotation> for Standard {
 impl fmt::Display for Rotation {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}{}", self.face, self.modifier)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn opposite_faces() {
+        let face = Face::Up;
+        assert_eq!(face.opposite(), Face::Down);
+
+        let face = Face::Down;
+        assert_eq!(face.opposite(), Face::Up);
+
+        let face = Face::Right;
+        assert_eq!(face.opposite(), Face::Left);
+
+        let face = Face::Left;
+        assert_eq!(face.opposite(), Face::Right);
+
+        let face = Face::Front;
+        assert_eq!(face.opposite(), Face::Back);
+
+        let face = Face::Back;
+        assert_eq!(face.opposite(), Face::Front);
+    }
+
+    #[test]
+    fn every_rotation_is_valid_if_empty() {
+        for _ in 0..100 {
+            let r: Rotation = rand::random();
+            assert!(r.is_valid(None, None));
+        }
+    }
+
+    #[test]
+    fn valid_rotations_different_faces() {
+        let r1 = Rotation {
+            face: Face::Up,
+            modifier: rand::random(),
+        };
+        let r2 = Rotation {
+            face: Face::Left,
+            modifier: rand::random(),
+        };
+        assert!(r1.is_valid(Some(&r2), None));
+
+        let r1 = Rotation {
+            face: Face::Down,
+            modifier: rand::random(),
+        };
+        let r2 = Rotation {
+            face: Face::Left,
+            modifier: rand::random(),
+        };
+        assert!(r1.is_valid(Some(&r2), None));
+
+        let r1 = Rotation {
+            face: Face::Right,
+            modifier: rand::random(),
+        };
+        let r2 = Rotation {
+            face: Face::Left,
+            modifier: rand::random(),
+        };
+        assert!(r1.is_valid(Some(&r2), None));
+
+        let r1 = Rotation {
+            face: Face::Back,
+            modifier: rand::random(),
+        };
+        let r2 = Rotation {
+            face: Face::Left,
+            modifier: rand::random(),
+        };
+        assert!(r1.is_valid(Some(&r2), None));
+
+        let r1 = Rotation {
+            face: Face::Front,
+            modifier: rand::random(),
+        };
+        let r2 = Rotation {
+            face: Face::Left,
+            modifier: rand::random(),
+        };
+        assert!(r1.is_valid(Some(&r2), None));
+    }
+
+    #[test]
+    fn invalid_self_solving_rotations() {
+        let r1 = Rotation {
+            face: Face::Up,
+            modifier: Modifier::Empty,
+        };
+        let r2 = Rotation {
+            face: Face::Up,
+            modifier: Modifier::Prime,
+        };
+        assert!(!r1.is_valid(Some(&r2), None));
+
+        let r1 = Rotation {
+            face: Face::Right,
+            modifier: Modifier::Prime,
+        };
+        let r2 = Rotation {
+            face: Face::Right,
+            modifier: Modifier::Empty,
+        };
+        assert!(!r1.is_valid(Some(&r2), None));
+
+        let r1 = Rotation {
+            face: Face::Back,
+            modifier: Modifier::Two,
+        };
+        let r2 = Rotation {
+            face: Face::Back,
+            modifier: Modifier::Two,
+        };
+        assert!(!r1.is_valid(Some(&r2), None));
+    }
+
+    #[test]
+    fn invalid_same_plane_rotation() {
+        let r1 = Rotation {
+            face: Face::Up,
+            modifier: Modifier::Empty,
+        };
+        let r2 = Rotation {
+            face: Face::Right,
+            modifier: Modifier::Empty,
+        };
+        let r3 = Rotation {
+            face: Face::Up,
+            modifier: Modifier::Prime,
+        };
+        assert!(!r1.is_valid(Some(&r2), Some(&r3)));
+
+        let r1 = Rotation {
+            face: Face::Up,
+            modifier: Modifier::Empty,
+        };
+        let r2 = Rotation {
+            face: Face::Right,
+            modifier: Modifier::Empty,
+        };
+        let r3 = Rotation {
+            face: Face::Down,
+            modifier: Modifier::Empty,
+        };
+        assert!(!r1.is_valid(Some(&r2), Some(&r3)));
     }
 }
