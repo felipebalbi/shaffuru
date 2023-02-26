@@ -5,7 +5,7 @@ use rand::{
 use std::fmt;
 
 #[derive(PartialEq, Debug, Clone)]
-pub(crate) enum Face {
+enum Face {
     Front,
     Back,
     Right,
@@ -56,7 +56,7 @@ impl fmt::Display for Face {
 }
 
 #[derive(PartialEq, Debug, Clone)]
-pub(crate) enum Modifier {
+enum Modifier {
     Empty,
     Prime,
     Two,
@@ -86,8 +86,26 @@ impl fmt::Display for Modifier {
 
 #[derive(PartialEq, Debug, Clone)]
 pub(crate) struct Rotation {
-    pub(crate) face: Face,
-    pub(crate) modifier: Modifier,
+    face: Face,
+    modifier: Modifier,
+}
+
+impl Rotation {
+    pub(crate) fn is_valid(
+        &self,
+        last: Option<&Rotation>,
+        second_to_last: Option<&Rotation>,
+    ) -> bool {
+        if last.is_none() && second_to_last.is_none() {
+            true
+        } else if second_to_last.is_none() {
+            self.face != last.unwrap().face
+        } else {
+            self.face != second_to_last.unwrap().face
+                && self.face != second_to_last.unwrap().face.opposite()
+                && self.face != last.unwrap().face
+        }
+    }
 }
 
 impl Distribution<Rotation> for Standard {

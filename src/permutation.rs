@@ -18,29 +18,8 @@ impl Permutation {
             let last = rotations.get(rotations.len().wrapping_sub(1));
             let second_to_last = rotations.get(rotations.len().wrapping_sub(2));
 
-            match second_to_last {
-                None => match last {
-                    // Very first rotation. Just push it onto the rotations list
-                    None => rotations.push(current.clone()),
-                    // The second rotation. It must be different from the
-                    // previous face
-                    Some(value) => {
-                        if current.face != value.face {
-                            rotations.push(current.clone());
-                        }
-                    }
-                },
-                // Rotations list has at least 2 rotations. Current must be
-                // different from previous and choose a face from a
-                // different plane than the second to last face.
-                Some(value) => {
-                    if current.face != value.face
-                        && current.face != value.face.opposite()
-                        && current.face != last.unwrap().face
-                    {
-                        rotations.push(current.clone());
-                    }
-                }
+            if current.is_valid(last, second_to_last) {
+                rotations.push(current);
             }
         }
 
