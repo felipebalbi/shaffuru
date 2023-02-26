@@ -1,3 +1,3 @@
 # Shaffuru
 
-A simple Rubik's cube scramble generator
+A simple Rubik's cube permutation generator
