@@ -57,14 +57,24 @@ impl Default for Permutation {
     }
 }
 
-pub fn run(cli: Cli) -> Result<()> {
+impl fmt::Display for Permutation {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        writeln!(f, "Seed: {}", self.seed)?;
+
+        for m in self.moves.iter() {
+            write!(f, "{m} ")?;
+        }
+
+        Ok(())
+    }
+}
+
+pub fn run(cli: Cli) -> Result<Permutation> {
     let mut perm = Permutation::new();
 
     perm.length = cli.length;
     perm.seed = cli.seed.unwrap_or(rand::random());
     let mut rng = StdRng::seed_from_u64(perm.seed);
-
-    println!("Seed: {}", perm.seed);
 
     while perm.moves.len() < perm.length.into() {
         let current: Move = rng.gen();
@@ -97,13 +107,7 @@ pub fn run(cli: Cli) -> Result<()> {
         }
     }
 
-    for m in perm.moves {
-        print!("{} ", m);
-    }
-
-    println!();
-
-    Ok(())
+    Ok(perm)
 }
 
 fn parse_length(s: &str) -> std::result::Result<u8, String> {

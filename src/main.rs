@@ -4,6 +4,9 @@ use std::error::Error;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let cli = Cli::parse();
-    run(cli)?;
+    let perm = run(cli)?;
+
+    println!("{perm}");
+
     Ok(())
 }
