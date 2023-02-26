@@ -34,11 +34,13 @@ pub struct Cli {
     length: u8,
 }
 
-pub fn run(cli: Cli) -> Result<Permutation> {
-    Ok(Permutation::generate(
-        cli.seed.unwrap_or(rand::random()),
-        cli.length,
-    ))
+impl Cli {
+    pub fn run(&self) -> Result<Permutation> {
+        Ok(Permutation::generate(
+            self.seed.unwrap_or(rand::random()),
+            self.length,
+        ))
+    }
 }
 
 fn parse_length(s: &str) -> std::result::Result<u8, String> {
