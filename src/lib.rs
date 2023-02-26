@@ -35,46 +35,69 @@ pub struct Cli {
     length: u8,
 }
 
+pub struct Permutation {
+    seed: u64,
+    length: u8,
+    moves: Vec<Move>,
+}
+
+impl Permutation {
+    fn new() -> Self {
+        Default::default()
+    }
+}
+
+impl Default for Permutation {
+    fn default() -> Self {
+        Self {
+            seed: Default::default(),
+            length: Default::default(),
+            moves: Default::default(),
+        }
+    }
+}
+
 pub fn run(cli: Cli) -> Result<()> {
-    let length = cli.length;
-    let seed: u64 = cli.seed.unwrap_or(rand::random());
-    let mut perm: Vec<Move> = Vec::default();
-    let mut rng = StdRng::seed_from_u64(seed);
+    let mut perm = Permutation::new();
 
-    println!("Seed: {seed}");
+    perm.length = cli.length;
+    perm.seed = cli.seed.unwrap_or(rand::random());
+    let mut rng = StdRng::seed_from_u64(perm.seed);
 
-    while perm.len() < length.into() {
+    println!("Seed: {}", perm.seed);
+
+    while perm.moves.len() < perm.length.into() {
         let current: Move = rng.gen();
-        let last = perm.last();
+        let last = perm.moves.last();
 
         match last {
-            None => perm.push(current),
+            None => perm.moves.push(current),
             Some(value) => {
                 // If the current face is opposite to previous face,
                 // check the face before that and ensure the current
                 // is not on the same plane.
                 if current.face == value.face.opposite() {
-                    let second_to_last = perm.get(perm.len().wrapping_sub(1));
+                    let second_to_last = perm.moves.get(perm.moves.len().wrapping_sub(1));
 
                     match second_to_last {
                         Some(value) => {
                             if current.face != value.face && current.face != value.face.opposite() {
-                                perm.push(current);
+                                perm.moves.push(current);
                             }
                         }
-                        None => perm.push(current),
+                        None => perm.moves.push(current),
                     }
                 } else if current.face != value.face {
                     // Ensure current face is not the same as the
                     // previous face
-                    perm.push(current);
+                    perm.moves.push(current);
                 } else {
                 }
             }
         }
     }
 
-    for m in perm {
+    for m in perm.moves {
         print!("{} ", m);
     }
 
