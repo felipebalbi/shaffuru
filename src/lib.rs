@@ -1,4 +1,4 @@
-pub mod permutation;
+mod permutation;
 mod rotation;
 
 use clap::Parser;
