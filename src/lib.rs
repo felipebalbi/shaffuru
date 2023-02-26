@@ -19,7 +19,7 @@ pub struct Cli {
         short = 's',
         long = "seed",
         value_name = "SEED",
-        help = "Seed for the random number generator"
+        help = "Seed for the random number generator."
     )]
     seed: Option<u64>,
 
@@ -29,7 +29,7 @@ pub struct Cli {
         value_name = "LENGTH",
 	value_parser = parse_length,
 	default_value = "25",
-        help = "Length of generated permutation"
+        help = "Length of generated permutation. Maximum length is 255 moves.",
     )]
     length: u8,
 }
