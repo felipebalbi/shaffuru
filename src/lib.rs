@@ -78,30 +78,30 @@ pub fn run(cli: Cli) -> Result<Permutation> {
 
     while perm.moves.len() < perm.length.into() {
         let current: Move = rng.gen();
-        let last = perm.moves.last();
+        let last = perm.moves.get(perm.moves.len().wrapping_sub(1));
+        let second_to_last = perm.moves.get(perm.moves.len().wrapping_sub(2));
 
-        match last {
-            None => perm.moves.push(current),
-            Some(value) => {
-                // If the current face is opposite to previous face,
-                // check the face before that and ensure the current
-                // is not on the same plane.
-                if current.face == value.face.opposite() {
-                    let second_to_last = perm.moves.get(perm.moves.len().wrapping_sub(1));
-
-                    match second_to_last {
-                        Some(value) => {
-                            if current.face != value.face && current.face != value.face.opposite() {
-                                perm.moves.push(current);
-                            }
-                        }
-                        None => perm.moves.push(current),
+        match second_to_last {
+            None => match last {
+                // Very first move. Just push it onto the moves list
+                None => perm.moves.push(current.clone()),
+                // The second move. It must be different from the
+                // previous face
+                Some(value) => {
+                    if current.face != value.face {
+                        perm.moves.push(current.clone());
                     }
-                } else if current.face != value.face {
-                    // Ensure current face is not the same as the
-                    // previous face
-                    perm.moves.push(current);
-                } else {
+                }
+            },
+            // Moves list has at least 2 moves. Current must be
+            // different from previous and choose a face from a
+            // different plane than the second to last face.
+            Some(value) => {
+                if current.face != value.face
+                    && current.face != value.face.opposite()
+                    && current.face != last.unwrap().face
+                {
+                    perm.moves.push(current.clone());
                 }
             }
         }
@@ -117,7 +117,7 @@ fn parse_length(s: &str) -> std::result::Result<u8, String> {
     Ok(length)
 }
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Debug, Clone)]
 enum Face {
     Front,
     Back,
@@ -168,7 +168,7 @@ impl fmt::Display for Face {
     }
 }
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Debug, Clone)]
 enum Modifier {
     Empty,
     Prime,
@@ -197,7 +197,7 @@ impl fmt::Display for Modifier {
     }
 }
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Debug, Clone)]
 struct Move {
     face: Face,
     modifier: Modifier,
