@@ -38,43 +38,43 @@ pub struct Cli {
 pub fn run(cli: Cli) -> Result<()> {
     let length = cli.length;
     let seed: u64 = cli.seed.unwrap_or(rand::random());
-    let mut scramble: Vec<Move> = Vec::default();
+    let mut perm: Vec<Move> = Vec::default();
     let mut rng = StdRng::seed_from_u64(seed);
 
     println!("Seed: {seed}");
 
-    while scramble.len() < length.into() {
+    while perm.len() < length.into() {
         let current: Move = rng.gen();
-        let last = scramble.last();
+        let last = perm.last();
 
         match last {
-            None => scramble.push(current),
+            None => perm.push(current),
             Some(value) => {
                 // If the current face is opposite to previous face,
                 // check the face before that and ensure the current
                 // is not on the same plane.
                 if current.face == value.face.opposite() {
-                    let second_to_last = scramble.get(scramble.len().wrapping_sub(1));
+                    let second_to_last = perm.get(perm.len().wrapping_sub(1));
 
                     match second_to_last {
                         Some(value) => {
                             if current.face != value.face && current.face != value.face.opposite() {
-                                scramble.push(current);
+                                perm.push(current);
                             }
                         }
-                        None => scramble.push(current),
+                        None => perm.push(current),
                     }
                 } else if current.face != value.face {
                     // Ensure current face is not the same as the
                     // previous face
-                    scramble.push(current);
+                    perm.push(current);
                 } else {
                 }
             }
         }
     }
 
-    for m in scramble {
+    for m in perm {
         print!("{} ", m);
     }
 
