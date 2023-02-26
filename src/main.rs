@@ -113,7 +113,7 @@ fn main() {
 
     println!("Seed: {seed}");
 
-    for _ in 0..25 {
+    while scramble.len() < 25 {
         let current: Move = rng.gen();
         let last = scramble.last();
 
