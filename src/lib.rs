@@ -1,9 +1,9 @@
-mod permutation;
-mod rotation;
-
 use clap::Parser;
 use permutation::Permutation;
 use std::error::Error;
+
+mod permutation;
+mod rotation;
 
 pub type Result<T> = std::result::Result<T, Box<dyn Error>>;
 
