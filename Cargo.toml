@@ -2,7 +2,7 @@
 name = "shaffuru"
 description = "A simple Rubik's cube random permutation generator"
 repository = "https://git.sr.ht/~balbi/shaffuru"
-version = "0.1.0"
+version = "1.0.0"
 edition = "2021"
 readme = "README.md"
 license = "GPL-3.0-or-later"
