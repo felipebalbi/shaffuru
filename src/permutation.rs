@@ -2,6 +2,7 @@ use crate::rotation::Rotation;
 use rand::{rngs::StdRng, Rng, SeedableRng};
 use std::fmt;
 
+#[derive(Default)]
 pub struct Permutation {
     seed: u64,
     length: u8,
@@ -27,16 +28,6 @@ impl Permutation {
             seed,
             length,
             rotations,
-        }
-    }
-}
-
-impl Default for Permutation {
-    fn default() -> Self {
-        Self {
-            seed: Default::default(),
-            length: Default::default(),
-            rotations: Default::default(),
         }
     }
 }
