@@ -15,14 +15,14 @@ enum Face {
 }
 
 impl Face {
-    pub(crate) fn opposite(&self) -> Self {
+    pub const fn opposite(&self) -> Self {
         match self {
-            Face::Front => Face::Back,
-            Face::Back => Face::Front,
-            Face::Right => Face::Left,
-            Face::Left => Face::Right,
-            Face::Up => Face::Down,
-            Face::Down => Face::Up,
+            Self::Front => Self::Back,
+            Self::Back => Self::Front,
+            Self::Right => Self::Left,
+            Self::Left => Self::Right,
+            Self::Up => Self::Down,
+            Self::Down => Self::Up,
         }
     }
 }
@@ -43,12 +43,12 @@ impl Distribution<Face> for Standard {
 impl fmt::Display for Face {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let face = match self {
-            Face::Front => "F",
-            Face::Back => "B",
-            Face::Right => "R",
-            Face::Left => "L",
-            Face::Up => "U",
-            Face::Down => "D",
+            Self::Front => "F",
+            Self::Back => "B",
+            Self::Right => "R",
+            Self::Left => "L",
+            Self::Up => "U",
+            Self::Down => "D",
         };
 
         write!(f, "{face}")
@@ -75,9 +75,9 @@ impl Distribution<Modifier> for Standard {
 impl fmt::Display for Modifier {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let modifier = match self {
-            Modifier::Empty => "",
-            Modifier::Two => "2",
-            Modifier::Prime => "\'",
+            Self::Empty => "",
+            Self::Two => "2",
+            Self::Prime => "\'",
         };
 
         write!(f, "{modifier}")
@@ -85,17 +85,13 @@ impl fmt::Display for Modifier {
 }
 
 #[derive(PartialEq, Debug, Clone)]
-pub(crate) struct Rotation {
+pub struct Rotation {
     face: Face,
     modifier: Modifier,
 }
 
 impl Rotation {
-    pub(crate) fn is_valid(
-        &self,
-        last: Option<&Rotation>,
-        second_to_last: Option<&Rotation>,
-    ) -> bool {
+    pub fn is_valid(&self, last: Option<&Self>, second_to_last: Option<&Self>) -> bool {
         if last.is_none() && second_to_last.is_none() {
             true
         } else if second_to_last.is_none() {

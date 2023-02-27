@@ -37,7 +37,7 @@ impl fmt::Display for Permutation {
         writeln!(f, "Seed: {}", self.seed)?;
         writeln!(f, "Length: {}", self.length)?;
 
-        for m in self.rotations.iter() {
+        for m in &self.rotations {
             write!(f, "{m} ")?;
         }
 

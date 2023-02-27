@@ -1,7 +1,12 @@
 [package]
 name = "shaffuru"
+description = "A simple Rubik's cube random permutation generator"
+repository = "https://git.sr.ht/~balbi/shaffuru"
 version = "0.1.0"
 edition = "2021"
+readme = "README.md"
+license = "GPL-3.0-or-later"
+keywords = ["rubik", "random", "permutation", "generator"]
 
 [dependencies]
 clap = { version = "4.1.6", features = ["derive"] }

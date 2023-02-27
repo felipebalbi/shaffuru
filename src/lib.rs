@@ -35,17 +35,18 @@ pub struct Cli {
 }
 
 impl Cli {
-    pub fn run(&self) -> Result<Permutation> {
-        Ok(Permutation::generate(
-            self.seed.unwrap_or(rand::random()),
-            self.length,
-        ))
+    #[must_use]
+    pub fn run(&self) -> Permutation {
+        Permutation::generate(self.seed.unwrap_or_else(rand::random), self.length)
     }
 }
 
+/// # Errors
+///
+/// Will return `Err` if `length` is larger than 255.
 fn parse_length(s: &str) -> std::result::Result<u8, String> {
     let length: u8 = s
         .parse()
-        .map_err(|_| format!("`{s}` isn't a valid length"))?;
+        .map_err(|_| format!("length must be less than 256"))?;
     Ok(length)
 }
