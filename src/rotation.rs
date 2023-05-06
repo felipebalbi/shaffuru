@@ -15,7 +15,7 @@ enum Face {
 }
 
 impl Face {
-    pub const fn opposite(&self) -> Self {
+    pub const fn to_opposite(&self) -> Self {
         match self {
             Self::Front => Self::Back,
             Self::Back => Self::Front,
@@ -98,7 +98,7 @@ impl Rotation {
             self.face != last.unwrap().face
         } else {
             self.face != second_to_last.unwrap().face
-                && self.face != second_to_last.unwrap().face.opposite()
+                && self.face != second_to_last.unwrap().face.to_opposite()
                 && self.face != last.unwrap().face
         }
     }
@@ -126,22 +126,22 @@ mod tests {
     #[test]
     fn opposite_faces() {
         let face = Face::Up;
-        assert_eq!(face.opposite(), Face::Down);
+        assert_eq!(face.to_opposite(), Face::Down);
 
         let face = Face::Down;
-        assert_eq!(face.opposite(), Face::Up);
+        assert_eq!(face.to_opposite(), Face::Up);
 
         let face = Face::Right;
-        assert_eq!(face.opposite(), Face::Left);
+        assert_eq!(face.to_opposite(), Face::Left);
 
         let face = Face::Left;
-        assert_eq!(face.opposite(), Face::Right);
+        assert_eq!(face.to_opposite(), Face::Right);
 
         let face = Face::Front;
-        assert_eq!(face.opposite(), Face::Back);
+        assert_eq!(face.to_opposite(), Face::Back);
 
         let face = Face::Back;
-        assert_eq!(face.opposite(), Face::Front);
+        assert_eq!(face.to_opposite(), Face::Front);
     }
 
     #[test]
