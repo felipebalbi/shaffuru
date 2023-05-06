@@ -9,7 +9,7 @@ mod rotation;
     name = "Shaffuru",
     author = "Felipe Balbi <felipe@balbi.sh>",
     about = "Generate random Rubik's cube permutations",
-    version = "0.1.0"
+    version = "1.0.0"
 )]
 pub struct Cli {
     #[arg(
